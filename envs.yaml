@@ -1,0 +1,61 @@
+---
+- dest: ~/venv/interactive
+  py_version: 3
+  install:
+    - bpython
+    - ptpython
+    - ipython
+    - matplotlib
+  exports:
+    - bin: bpython
+      cmd: bpython
+    - bin: ptpython
+      cmd: ptpython
+    - bin: ipython
+      cmd: ipython
+
+- dest: ~/venv/interactive2
+  py_version: 2
+  install:
+    - bpython
+    - ptpython
+    - ipython
+    - matplotlib
+  exports:
+    - bin: bpython
+      cmd: bpython2
+    - bin: ptpython
+      cmd: ptpython2
+    - bin: ipython
+      cmd: ipython2
+
+- dest: ~/venv/text
+  py_version: 3
+  install:
+    - markdown
+  exports:
+    - bin: markdown_py
+      cmd: markdown
+
+- dest: ~/venv/ansible
+  py_version: 2
+  install:
+    - ansible
+    - ansible-lint
+  exports:
+    - bin: ansible
+      cmd: ansible
+    - bin: ansible-console
+      cmd: ansible-console
+    - bin: ansible-doc
+      cmd: ansible-doc
+    - bin: ansible-galaxy
+      cmd: ansible-galaxy
+    - bin: ansible-playbook
+      cmd: ansible-playbook
+    - bin: ansible-pull
+      cmd: ansible-pull
+    - bin: ansible-vault
+      cmd: ansible-vault
+    - bin: ansible-lint
+      cmd: ansible-lint
