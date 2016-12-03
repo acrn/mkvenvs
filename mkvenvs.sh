@@ -8,54 +8,32 @@ then
     exit 1
 fi
 
-IFS="\0"
-
-py3venvs=(
-  bpython
-  ipython
-  markdown2
-  )
-py2venvs=(
-  bpython
-  ipython
-  )
-
 functions=""
 
-for venv in ${py3venvs[@]}
-do
-    envpath="$target/${venv}"
-    pyvenv "$envpath"
-    source "$envpath/bin/activate"
-    [[ ! "$(which pip)" =~ ^$target.* ]] \
-        && echo error error \
-        && exit 1
-    pip install $venv
-    deactivate
-    functions="$functions${venv} () {
-  local ep="$envpath/bin"
-  source \$ep/activate
-  \$ep/$venv \$@
-  deactivate
-}
-"
-done
+envs=(
+  ipython  pyvenv      ipython  ipython  ipython
+  ipython2 virtualenv2 ipython2 ipython  ipython
+  bpython  pyvenv      bpython  bpython  bpython
+  bpython2 virtualenv2 bpython2 bpython  bpython
+  markdown pyvenv      markdown markdown markdown_py
+)
 
-for venv in ${py2venvs[@]}
+for (( i=0; i<${#envs[@]}; i+=5 ))
 do
-    envpath="$target/${venv}2"
-    virtualenv2 "$envpath"
-    source "$envpath/bin/activate"
-    [[ ! "$(which pip)" =~ ^$target.* ]] \
-        && echo error error \
-        && exit 1
-    pip install $venv
-    deactivate
-    functions="$functions${venv}2 () {
-  local ep="$envpath/bin"
-  source \$ep/activate
-  \$ep/$venv \$@
-  deactivate
+    funname=${envs[$i]}
+    venvbin=${envs[$i+1]}
+    envname=${envs[$i+2]}
+    pipname=${envs[$i+3]}
+    binname=${envs[$i+4]}
+
+    envpath="$target/$envname"
+    $venvbin "$envpath"
+    $envpath/bin/pip install --upgrade "$pipname"
+    functions="$functions$funname () {
+ local ep="$envpath/bin"
+ source \$ep/activate
+ \$ep/$binname \$@
+ deactivate
 }
 "
 done
