@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import itertools
 import os
 import subprocess
 import sys
@@ -55,14 +56,18 @@ if args.upgrade:
 
 if args.printrc:
     print("### The following goes into .bashrc/.zshrc: ###")
+    print("reenv () {")
     for env in envs:
         dest = os.path.expanduser(env['dest'])
         for export in env['exports']:
-            print("""\
-{} () {{local ep="{}";source "$ep/activate";"$ep/{}" $@;deactivate}} \
-""".format(
-        export['cmd'],
-        os.path.join(dest, 'bin'),
-        export['bin']
-        )
-    )
+            print('{} () {{local ep="{}";'
+                  'source "$ep/activate";'
+                  '"$ep/{}" $@;'
+                  'deactivate;}}'.format(export['cmd'],
+                                         os.path.join(dest, 'bin'),
+                                         export['bin']))
+    print("}")
+    all_cmds = (x['cmd'] for x in
+                itertools.chain.from_iterable(e['exports'] for e in envs))
+    print("unenv () {{unset -f {};}}".format(' '.join(all_cmds)))
+    print("reenv")
