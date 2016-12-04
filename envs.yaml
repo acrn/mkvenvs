@@ -41,6 +41,7 @@
   py_version: 2
   install:
     - ansible
+    - ansible-lint
   exports:
     - bin: ansible
       cmd: ansible
@@ -56,3 +57,5 @@
       cmd: ansible-pull
     - bin: ansible-vault
       cmd: ansible-vault
+    - bin: ansible-lint
+      cmd: ansible-lint
